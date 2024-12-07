@@ -5,6 +5,7 @@ public class Servidor {
     ServerSocket socketServidor = null;
     Socket socketCliente = null;
     DataInputStream in =  null;
+    DataOutputStream out = null;
 
     public Servidor(int puerto) {
 
@@ -13,13 +14,21 @@ public class Servidor {
             System.out.println("Servidor escuchando...");
             socketCliente = socketServidor.accept();
             in = new DataInputStream(new BufferedInputStream(socketCliente.getInputStream()));
+            out = new DataOutputStream(socketCliente.getOutputStream());
             System.out.println("Servidor conectado con un cliente");
-
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+    public void notificar() {
+        try {
+            out.writeUTF("Servidor: Escriba los mensajes que requiera al servidor. Para finalizar escriba exit.");
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void imprimir() {
         try {
             String line = in.readUTF();
@@ -28,7 +37,6 @@ public class Servidor {
                 line = in.readUTF();
 
             }
-            in.close();
             System.out.println("El cliente ha cerrado la conexion...");
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -36,6 +44,8 @@ public class Servidor {
     }
     public void cerrar() {
         try {
+            in.close();
+            out.close();
             socketServidor.close();
 
         } catch (IOException e) {
@@ -45,6 +55,7 @@ public class Servidor {
     }
     public static void main(String[] args) {
         Servidor servidor = new Servidor(1234);
+        servidor.notificar();
         servidor.imprimir();
         servidor.cerrar();
 
