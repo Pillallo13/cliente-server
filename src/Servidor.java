@@ -12,14 +12,30 @@ public class Servidor {
         try {
             socketServidor = new ServerSocket(puerto);
             System.out.println("Servidor escuchando...");
-            socketCliente = socketServidor.accept();
-            in = new DataInputStream(new BufferedInputStream(socketCliente.getInputStream()));
-            out = new DataOutputStream(socketCliente.getOutputStream());
-            System.out.println("Servidor conectado con un cliente");
+            this.aceptarClientes();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+
+    public void aceptarClientes() {
+        try {
+            for (int numCli = 1; numCli <= 2; numCli++) {
+                socketCliente = socketServidor.accept();
+                OutputStream aux = socketCliente.getOutputStream();
+                in = new DataInputStream(new BufferedInputStream(socketCliente.getInputStream()));
+                out = new DataOutputStream(socketCliente.getOutputStream());
+                System.out.println("Servidor conectado al cliente " + numCli);
+                this.notificar();
+                this.imprimir(numCli);
+            }
+            System.out.println("maximo de clientes alcanzado\nSe cierra el servidor");
+            this.cerrar();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void notificar() {
         try {
             out.writeUTF("Servidor: Escriba los mensajes que requiera al servidor. Para finalizar escriba exit.");
@@ -29,11 +45,11 @@ public class Servidor {
         }
     }
 
-    public void imprimir() {
+    public void imprimir(int numCliente) {
         try {
             String line = in.readUTF();
             while(!line.equals("exit")) {
-                System.out.println("Cliente dice : " + line);
+                System.out.println("Cliente " + numCliente + " : " + line);
                 line = in.readUTF();
 
             }
@@ -55,9 +71,5 @@ public class Servidor {
     }
     public static void main(String[] args) {
         Servidor servidor = new Servidor(1234);
-        servidor.notificar();
-        servidor.imprimir();
-        servidor.cerrar();
-
     }
 }
