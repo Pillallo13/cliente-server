@@ -1,12 +1,15 @@
-public class suma {
+public class Suma {
 
-    String message;
+    public boolean esNumero(Object obj) {
+        return (obj instanceof Number);
+    }
 
-    public void add(int a, int b) {
-        message = "La suma de " + a + " + " + b + " es: " + (a + b);
+    public int sumar(int a, int b) {
+        if (this.esNumero(a) == true && this.esNumero(b) == true) {
+            return a + b;
+        } else {
+            return 0;
+        }
     }
-    public String sendMessage() {
-        return message;
-    }
-    
+
 }
