@@ -1,4 +1,5 @@
 import java.net.*;
+import Operaciones.*;
 import java.io.*;
 
 public class Servidor {
@@ -6,9 +7,12 @@ public class Servidor {
     Socket socketCliente = null;
     DataInputStream in = null;
     DataOutputStream out = null;
-    Suma suma = new Suma();
     int number = 0;
-    int numCli = 0;
+    Operacion suma = new Suma();
+    Operacion resta = new Resta();
+    Operacion multiplicacion = new Multiplicar();
+    Operacion dividir = new Dividir();    
+    Operacion[] operaciones = {suma, resta, multiplicacion, dividir};
 
     public Servidor(int puerto) {
 
@@ -47,10 +51,17 @@ public class Servidor {
         }
     }
 
-    public int sumar(String line) {
+    public int operar(Operacion operador ,String line) {
 
-        number = suma.sumar(number, Integer.parseInt(line));
+        number = operador.operar(number, Integer.parseInt(line));
         return number;
+    }
+
+    public void calculos(String line) {
+        for (Operacion operator : operaciones) {
+            this.operar(operator, line);
+            this.notificar("Resultado de la operacion " + operator.getClass().getSimpleName() + " : " + number);
+        }
     }
 
     public void imprimir(int numCliente) {
@@ -59,9 +70,8 @@ public class Servidor {
             while (!line.equals("0")) {
                 line = in.readUTF();
                 System.out.println("Cliente " + numCliente + " : " + line);
-                number = suma.sumar(number, Integer.parseInt(line));
+
             }
-            this.notificar("La suma de los numeros ingresados es: " + number);
             System.out.println("El cliente ha cerrado la conexion...");
         } catch (IOException e) {
             throw new RuntimeException(e);
