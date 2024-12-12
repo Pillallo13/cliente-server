@@ -10,7 +10,6 @@ public class test {
     Operacion resta = new Resta();
     Operacion multiplicacion = new Multiplicar();
     Operacion dividir = new Dividir();
-    Operacion[] operaciones = { suma, resta, multiplicacion, dividir };
 
     @Test
     public void testOperaciones() {
@@ -38,4 +37,38 @@ public class test {
      * 
      * }
      */
+
+    @Test
+    public void testSuma() {
+        assertEquals(30 + 20, suma.operar(30, 20), 0);
+        assertEquals(13 + 50, suma.operar(13, 50), 0);
+        assertEquals(46 + 13, suma.operar(46, 13), 0);
+        assertEquals(41 + 17, suma.operar(41, 17), 0);
+    }
+
+    @Test
+    public void testResta() {
+        assertEquals(30 - 20, resta.operar(30, 20), 0);
+        assertEquals(13 - 50, resta.operar(13, 50), 0);
+        assertEquals(46 - 13, resta.operar(46, 13), 0);
+        assertEquals(41 - 17, resta.operar(41, 17), 0);
+
+    }
+
+    @Test
+    public void testMult() {
+        assertEquals(30 * 20, multiplicacion.operar(30, 20), 0);
+        assertEquals(13 * 50, multiplicacion.operar(13, 50), 0);
+        assertEquals(46 * 13, multiplicacion.operar(46, 13), 0);
+        assertEquals(41 * 17, multiplicacion.operar(41, 17), 0);
+    }
+
+    @Test
+    public void testDivi() {
+        assertEquals(30 / 20, dividir.operar(30, 20), 0);
+        assertEquals(13 / 50, dividir.operar(13, 50), 0);
+        assertEquals(46 / 13, dividir.operar(46, 13), 0);
+        assertEquals(41 / 17, dividir.operar(41, 17), 0);
+    }
+
 }
